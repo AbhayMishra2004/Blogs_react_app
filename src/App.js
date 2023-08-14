@@ -16,7 +16,7 @@ export default function App() {
   const {fetchBlogPosts} = useContext(AppContext) ; 
 
   // CURRENT URL KE PARAMETER KE OPTION KO 
-  const[searchParams, setSearchParams] = useSearchParams() ; 
+  const[searchParams] = useSearchParams() ; 
 
   // CURRENT URL KI COMPLETE INFO RAKHTA HAI 
   const location = useLocation();
