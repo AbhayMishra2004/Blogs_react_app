@@ -1,0 +1,9 @@
+(1) Home per hai 
+
+(2) category per click kiya 
+
+(3) path name ke change hone se , App ka useEffect call hoga 
+
+(4) vaha se APP context se API fetch aur sab ho jayega 
+
+(5) fir Routes ke through , category page per jayenge . 

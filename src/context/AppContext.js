@@ -1,78 +1,97 @@
-import {createContext, useState} from 'react' ; 
+import React from 'react'
+import {useState, createContext} from 'react' ;
+import { useNavigate } from 'react-router-dom';
 import {baseUrl} from "../baseUrl"
 
-// STEP 1 ; 
-// CREATE APP CONTEXT 
-// EXPORT BECAUSE OTHER FILE MAI USE KARNA HAI 
+
 export const AppContext = createContext() ; 
 
-
-// CHILDREN BY DEFAULT USE HOGA 
-export default function AppContextProvider({children})
+export default function AppContextProvider({children}) 
 {
-    const[loading , setLoading] = useState(false) ; 
-    const [posts, setPosts] = useState([]);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+
+  const navigate = useNavigate() ; 
 
 
-    // DATA FEELING
-    async function fetchBlogPosts(page = 1)
-    {
-        setLoading(true) ; 
-        
-        // URL MAI BASE URL AUR PAGE NUMBER 
-        let url = `${baseUrl}?page=${page}` ; 
-
-        try
-        {
-            const result = await fetch(url) ; 
-            const data = await result.json() ; 
-
-            // PAGE NUMBER KO SET KAR DO  
-            setPage(data.page) ; 
-
-            // POST KO BHI USKE HISAB SE SET KAR DO 
-            setPosts(data.posts) ; 
-
-            // TOTAL PAGES KO BHI SET KAR DO 
-            setTotalPages(data.totalPages) ; 
-        }
-
-        catch(error)
-        {
-            console.log("Error in fethcing data") ; 
-
-            // SABKO INITIAL STAGE MAI LE AAO 
-            setPage(1) ; 
-            setPosts([]) ; 
-            setTotalPages(null) ; 
-        }
-        
-        setLoading(false) ; 
-    }
-
-
-    // JAB PAGE CHANGE HOGA USKO HANDLE KARNE KE LIYE
-    function handlePageChange(page)
-    {
-        // jo bhi page hai usko set kar do 
-        setPage(page) ; 
-
-        // USI KE LIYE DATA FETCH KARO 
-        fetchBlogPosts(page) ; 
-    }
+// FETCH DATA BLOS 
+const fetchBlogPosts = async (page=1, tag=null, category) => 
+{
+    setLoading(true) ; 
     
+    let url = `${baseUrl}?page=${page}` ; 
+
+    // IF TAG IS AVILABE 
+    if(tag)
+    {
+        url += `&tag=${tag}` ; 
+        // console.log(url); 
+    }
+
+    // IF CATEGORY IS AVILABLE 
+    if(category)
+    {
+        url += `&category=${category}` ; 
+    }
+
+    try
+    {
+        const result = await fetch(url) ; 
+        const data = await result.json() ; 
+
+        // console.log(data) ; 
+
+        // AGAR DATA KE PASS POST NA HO TO 
+        if(! data.posts || data.posts.length === 0)
+            throw new Error("Someting Went Wrong") ; 
+
+        setPage(data.page) ; 
+
+        setPosts(data.posts) ; 
+        // console.log( "Post" , data.posts) ; 
+
+        setTotalPages(data.totalPages) ; 
+        // console.log(data.totalPages) ; 
+    }
+
+    catch(error)
+    {
+        console.log("Error -> " , error) ; 
+        setPage(1) ; 
+        setPosts([]) ; 
+        setTotalPages(null) ; 
+    }
+
+    setLoading(false) ; 
+}
 
 
-    // JISKO HUME PASS KARNA HAI VO VALUE 
-    const value = {loading , setLoading, posts, setPosts, page, setPage, totalPages, setTotalPages, fetchBlogPosts, handlePageChange } ; 
+//  Handle When Next and Previous button are clicked
+const handlePageChange = (page) => 
+{
+    // IS LINE SE URL MAI CHANGE HORA HAI 
+    navigate({search: `?page=${page}`}) ;  // is line mai thora confusion hai . 
+    setPage(page) ; 
+}
+
+const value = {
+    posts,
+    setPosts,
+    loading,
+    setLoading,
+    page,
+    setPage,
+    totalPages,
+    setTotalPages,
+    fetchBlogPosts,
+    handlePageChange,
+  };
 
 
-    // APPCONTEXT KE CHILDREN KO YAH VALUE RETURN KAR DO 
-    // ISME APP CONTEXT KA CHILDREN APP HAI , ( INDEX.JS ) MAI DEKHNA 
-    return <AppContext.Provider value = {value} > 
-                {children}
-        </AppContext.Provider>
-
+  return <AppContext.Provider value={value}>
+    {children}
+  </AppContext.Provider>
+ 
 }

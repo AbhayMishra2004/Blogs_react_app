@@ -1,42 +1,46 @@
-import React from 'react' ; 
-import { useContext } from 'react' ; 
-import {AppContext} from '../context/AppContext'
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export default function Pagination() {
 
-  const {page, handlePageChange, totalPages } = useContext(AppContext) ; 
+    // USING APP CONTEXT TO TAKE THE VARIABLES 
+    const { page, handlePageChange, totalPages } = useContext(AppContext);
+
+    // AGAR TOTAL PAGES NA HO TO 
+    if (!totalPages) return null;
+
+    return (
 
 
-  return (
+        <div className="fixed bottom-0 inset-x-0 bg-white py-2 border-t-2 border-t-gray-300">
 
-    <div className="w-full flex justify-center items-center border-2  fixed bottom-0 bg-white">
+            <div className="flex items-center gap-x-3 w-11/12 max-w-2xl mx-auto">
 
-    <div className="flex justify-between w-11/12 max-w-[670px] py-2 items-center">
+                {/* PREVIOUS BUTTON  */}
+                {page > 1 && (
+                    <button
+                        onClick={() => handlePageChange(page - 1)}
+                        className="border-2 border-gray-300 py-1 px-4 rounded-md"
+                    >
+                        Previous
+                    </button>
+                )}
 
-    <div className="flex gap-x-2">
+                {/* NEXT BUTTON  */}
+                {page < totalPages && (
+                    <button
+                        onClick={() => handlePageChange(page + 1)}
+                        className="border-2 border-gray-300 py-1 px-4 rounded-md"
+                    >
+                        Next
+                    </button>
+                )}
 
-      {/* PREVIOUS BUTTON , HO FIRST PAGE MAIN NI DIKHEGA */}
-        {
-          page > 1 && 
-        <button onClick={() => handlePageChange(page - 1)} className="rounded-md border-2 py-1 px-4"> Previous </button>
-        }
-      
-      {/* NEXT WALA BUTTON , LAST PAGE MAI NI DIKHEGA */}
-      {
-        page < totalPages &&
-            <button onClick={() => handlePageChange(page + 1)} className="rounded-md border-2 py-1 px-4"> Next </button>
-      }
-    
-    </div>
-
-
-      {/* SOW TOTAL PAGE AND CURRENT PAGE */}
-      <p className="font-bold text-sm">
-        page {page} of {totalPages}
-      </p>
-    
-    </div>
-
-    </div>
-  )
+                {/* SHOWING PAGES */}
+                <p className="text-sm font-bold ml-auto">
+                    Page {page} of {totalPages}
+                </p>
+            </div>
+        </div>
+    );
 }
