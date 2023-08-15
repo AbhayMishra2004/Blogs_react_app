@@ -52,6 +52,8 @@ export default function App() {
   
   // LOCATION.SEARCH FOR ? KE PICHE WALE PART KE LIYE 
   // location.pathname , Base URL ke badd ka path 
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, location.search]) 
 
 

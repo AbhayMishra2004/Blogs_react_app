@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -7,8 +7,7 @@ import Header from '../components/Header';
 import BlogDetails from '../components/BlogDetails';
 
 
-
-export default function () {
+export default function BlogPage() {
 
   const[blog , setBlogs] = useState(null) ; 
   const [relatedBlogs , setRelatedBlogs] = useState([]) ; 
@@ -61,6 +60,8 @@ export default function () {
       {
         fetchRelatedBlogs() ; 
       }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
   
